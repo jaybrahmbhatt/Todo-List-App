@@ -1,0 +1,79 @@
+package brahmbhatt.jay.todolistapp;
+
+import android.view.LayoutInflater;
+import android.view.TextureView;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
+
+import static android.media.CamcorderProfile.get;
+
+public class itemsAdapter  extends RecyclerView.Adapter<itemsAdapter.ViewHolder> {
+
+    public interface  OnLongClickListener{
+        void onItemLongClicked(int position);
+
+    };
+
+    List<String> items;
+    OnLongClickListener longClickListener;
+
+    public itemsAdapter(List<String> items, OnLongClickListener longClickListener) {
+         this.items= items;
+         this.longClickListener=longClickListener;
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+        View todoView =LayoutInflater.from(parent.getContext()).inflate(android.R.layout.simple_list_item_1,parent,false);
+
+
+        return new ViewHolder(todoView);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+
+        String item= items.get(position);
+
+
+        holder.bind(item);
+    }
+
+    @Override
+    public int getItemCount() {
+        return items.size();
+
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder{
+
+        TextView tvItem;
+
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            tvItem = itemView.findViewById(android.R.id.text1);
+        }
+
+        //update the view inside the view  holder with the data of string item
+        public void bind(String item) {
+            tvItem.setText(item);
+            tvItem.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    //Notify which position was long pressed
+                    longClickListener.onItemLongClicked(getAdapterPosition());
+                    return true;
+                }
+            });
+
+        }
+    }
+}
